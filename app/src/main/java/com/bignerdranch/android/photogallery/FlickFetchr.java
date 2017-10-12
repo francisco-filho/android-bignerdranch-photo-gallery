@@ -21,18 +21,38 @@ import java.util.List;
 
 public class FlickFetchr {
     private static final String TAG = FlickFetchr.class.getSimpleName();
-    private static final String API_KEY = "apikey";
-
-    public List<GalleryItem> fetchItems(){
-        List<GalleryItem> items = new ArrayList<>();
-        String url = Uri.parse("https://api.flickr.com/services/rest/")
+    private static final String API_KEY = "8eff02827be92603555735001795390f";
+    private static final String FETCH_RECENTS_METHOD = "flickr.photos.getRecent";
+    private static final String SEARCH_METHOD = "flickr.photos.search";
+    private static final Uri ENDPOINT = Uri.parse("https://api.flickr.com/services/rest/")
                 .buildUpon()
-                .appendQueryParameter("method", "flickr.photos.getRecent")
                 .appendQueryParameter("api_key", API_KEY)
                 .appendQueryParameter("format", "json")
                 .appendQueryParameter("nojsoncallback", "1")
-                .appendQueryParameter("extras", "urls")
-                .build().toString();
+                .appendQueryParameter("extras", "url_s")
+                .build();
+
+    public List<GalleryItem> fetchRecentPhotos(){
+        String url = buildUrl(FETCH_RECENTS_METHOD, null);
+        return downloadGalleryItems(url);
+    }
+
+    public List<GalleryItem> searchPhotos(String query){
+        String url = buildUrl(SEARCH_METHOD, query);
+        return downloadGalleryItems(url);
+    }
+
+    private String buildUrl(String method, String query){
+        Uri.Builder uriBuilder = ENDPOINT.buildUpon()
+                .appendQueryParameter("method", method);
+        if (method.equals(SEARCH_METHOD)) {
+            uriBuilder.appendQueryParameter("text", query);
+        }
+        return uriBuilder.build().toString();
+    }
+
+    public List<GalleryItem> downloadGalleryItems(String url){
+        List<GalleryItem> items = new ArrayList<>();
         try {
             String jsonString = getUrlString(url);
             JSONObject payload = new JSONObject(jsonString);
@@ -54,8 +74,8 @@ public class FlickFetchr {
         for(int i = 0; i < photosArray.length(); i++) {
             JSONObject jsonObject = photosArray.getJSONObject(i);
             GalleryItem galleryItem = new GalleryItem(
-                    jsonObject.getString("id"),
-                    jsonObject.getString("title"));
+                    jsonObject.getString("title"),
+                    jsonObject.getString("id"));
 
             if (!jsonObject.has("url_s")) {
                 continue;
