@@ -7,7 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 public class PhotoGalleryActivity extends SingleFragmentActivity {
-public static Intent newIntent(Context ctx) {
+    public static Intent newIntent(Context ctx) {
         return new Intent(ctx, PhotoGalleryActivity.class);
     }
 

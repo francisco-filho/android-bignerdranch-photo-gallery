@@ -1,7 +1,5 @@
 package com.bignerdranch.android.photogallery;
 
-import android.app.DownloadManager;
-import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -28,7 +26,7 @@ import java.util.List;
  * Created by francisco on 10/10/17.
  */
 
-public class PhotoGalleryFragment extends Fragment{
+public class PhotoGalleryFragment extends VisibleFragment {
     private static final String TAG = "PhotoGalleryFragment";
     private RecyclerView mRecyclerView;
     List<GalleryItem> mItems = new ArrayList<>();
