@@ -81,6 +81,7 @@ public class FlickFetchr {
                 continue;
             }
             galleryItem.setUrl(jsonObject.getString("url_s"));
+            galleryItem.setOwner(jsonObject.getString("owner"));
             items.add(galleryItem);
         }
     }
